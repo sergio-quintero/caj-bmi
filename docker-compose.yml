@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: bmi
+      POSTGRES_USER: bmi
+      POSTGRES_PASSWORD: bmi

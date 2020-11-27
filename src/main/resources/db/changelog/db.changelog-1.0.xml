@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
+
+    <changeSet id="createExtension_Uuid" author="Mauricio" context="prod, test">
+        <sql dbms="postgresql" stripComments="true">
+            create extension if not exists "uuid-ossp";
+        </sql>
+    </changeSet>
+
+    <changeSet id="createTable_User" author="Mauricio" context="prod, test">
+        <createTable tableName="users">
+            <column name="user_uuid" type="uuid" defaultValue="${uuid_function}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sex" type="varchar(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="height" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="last_updated_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createUniqueIndexes_userTable" author="Mauricio" context="prod, test">
+        <createIndex tableName="users" indexName="idx_username" unique="true">
+            <column name="username"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="createTable_Bmi" author="Mauricio" context="prod, test">
+        <createTable tableName="bmi">
+            <column name="bmi_uuid" type="uuid" defaultValue="${uuid_function}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_uuid" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="last_updated_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createUniqueIndex_Bmi" author="Mauricio" context="prod, test">
+        <createIndex tableName="bmi" indexName="idx_bmi" unique="true">
+            <column name="bmi_uuid"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
